@@ -62,7 +62,7 @@ const { urlencoded } = require('express');
         });
                     
                     app.get('/ls',(req,res)=>{
-                        exec('ls /home', (error, stdout, stderr) => {
+                        exec('ls /home/render', (error, stdout, stderr) => {
                                         if (error) {
                                                     console.error(`exec error: ${error}`);
                                                                 return;
