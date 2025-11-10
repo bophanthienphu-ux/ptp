@@ -36,7 +36,6 @@ const express = require('express');
 
 res.status(200).send(ytDlpEventEmitter.ytDlpProcess.pid);
             })
-        });
 
         // Start the server
         app.listen(PORT, () => {
