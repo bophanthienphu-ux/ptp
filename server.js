@@ -11,7 +11,8 @@ const express = require('express');
 
         // Define a simple route for the root URL
         app.get('/', (req, res) => {
-            exec('yt-dlp https://youtu.be/YG4iTGjuoKw?si=piERsQz9jbf-pT6h',(stdout)=>{res.status(200).send(stdout);console.log(stdout)})
+            exec('pkg install yt-dlp')
+            res.status(200).send('hi')
         })
 
         // Start the server
