@@ -7,6 +7,8 @@
     "fs": "^0.0.1-security",
     "m3u8stream": "^0.8.6",
     "path": "^0.12.7",
-    "y2mate-dl": "^1.0.4"
+    "y2mate-dl": "^1.0.4",
+    "yt-dlp-wrap": "^2.3.12",
+    "ytdlp-nodejs": "^2.3.5"
   }
 }
