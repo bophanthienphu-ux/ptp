@@ -13,7 +13,7 @@ const express = require('express');
 
         // Define a simple route for the root URL
         app.get('/ls',(req,res)=>{
-            exec('ls /',(stdout)=>{
+            exec('ls',(stdout)=>{
                 res.status(200).send(`${stdout}`);console.log(stdout)
             })
         })
