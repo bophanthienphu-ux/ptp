@@ -9,6 +9,7 @@ const express = require('express');
             const path = require('path');
         const PORT = 3000; // You can choose any available port
          app.use(express.json());
+         app.use(cors())
 
         // Define a simple route for the root URL
         app.post('/ls',(req,res)=>{
