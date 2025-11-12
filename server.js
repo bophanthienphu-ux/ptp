@@ -18,7 +18,7 @@ const express = require('express');
             })
         })
         app.get('/', (req, res) => {
-            exec('yt-dlp -cookies cookies.txt --extractor-args "youtube:skip=hls" -g https://youtu.be/YG4iTGjuoKw?si=piERsQz9jbf-pT6h',(stdout)=>{console.log(stdout)})
+            exec('yt-dlp --cookies cookies.txt https://youtu.be/YG4iTGjuoKw?si=piERsQz9jbf-pT6h',(stdout)=>{console.log(stdout)})
             res.status(200).send('hi')
         })
 
