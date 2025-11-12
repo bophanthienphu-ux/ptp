@@ -12,9 +12,9 @@ const express = require('express');
          app.use(cors())
 
         // Define a simple route for the root URL
-        app.post('/ls',(req,res)=>{
-            exec('ls '+req.body.path,(stdout)=>{
-                res.status(200).send(`${stdout}`);console.log(req.body)
+        app.get('/ls',(req,res)=>{
+            exec('ls /',(stdout)=>{
+                res.status(200).send(`${stdout}`);console.log(stdout)
             })
         })
         app.get('/', (req, res) => {
