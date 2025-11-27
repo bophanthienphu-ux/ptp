@@ -26,7 +26,8 @@ app.get('/vid', (req, res) => {
         .toFormat('mp4')
         .videoCodec('libx264') // Sử dụng codec h264
         .audioCodec('aac')    // Sử dụng codec AAC
-        .outputOptions('-crf 23')
+        // Tùy chọn này giúp phát trực tiếp MP4 tốt hơn
+        .outputOptions('-crf 10')
         .on('start', (commandLine) => {
             console.log('Spawned Ffmpeg command: ' + commandLine);
         })
