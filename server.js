@@ -10,9 +10,9 @@ ffmpeg.setFfmpegPath(ffmpegStatic);
 
 // Đặt URL video nguồn cố định tại đây
 const SOURCE_VIDEO_URL = "https://phu-nine.vercel.app/api/download/?url=https://youtu.be/1bZtCt_Siro?si=i2NQWnKbYqmMK7Ud";
-// Thay thế URL mẫu trên bằng liên kết video thực tế của bạn
+// THAY THẾ URL MẪU TRÊN BẰNG LIÊN KẾT VIDEO THỰC TẾ CỦA BẠN
 
-// Sử dụng phương thức GET để truy cập trực tiếp việc chuyển đổi
+// Endpoint để kích hoạt quá trình chuyển đổi
 app.get('/vid', (req, res) => {
     console.log(`Starting conversion for specific URL: ${SOURCE_VIDEO_URL}`);
 
@@ -26,8 +26,7 @@ app.get('/vid', (req, res) => {
         .toFormat('mp4')
         .videoCodec('libx264') // Sử dụng codec h264
         .audioCodec('aac')    // Sử dụng codec AAC
-        // Tùy chọn này giúp phát trực tiếp MP4 tốt hơn
-        .outputOptions('-crf 10')
+        // Đã bỏ dòng .outputOptions(...) theo yêu cầu
         .on('start', (commandLine) => {
             console.log('Spawned Ffmpeg command: ' + commandLine);
         })
