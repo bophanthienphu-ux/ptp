@@ -1,28 +1,48 @@
-
-
 const express = require('express');
-        const app = express();
-        const cors = require('cors')
-            const { exec,spawn } = require('child_process');   
-            const axios = require('axios');
-            const fs = require('fs');
-            const path = require('path');
-        const PORT = 3000; // You can choose any available port
-         app.use(express.json());
-         app.use(cors())
+const ffmpeg = require('fluent-ffmpeg');
+const ffmpegStatic = require('ffmpeg-static');
 
-        // Define a simple route for the root URL
-        app.get('/ls',(req,res)=>{
-            exec('ls /home/render',(stdout)=>{
-                res.status(200).send(`${stdout}`);console.log(stdout)
-            })
-        })
-        app.get('/', (req, res) => {
-            exec('yt-dlp --cookies cookies.txt --extractor-args "youtube:player_client=default" --extractor-args "youtube:skip=hls" -g https://youtu.be/YG4iTGjuoKw?si=piERsQz9jbf-pT6h',(stdout)=>{console.log(stdout)})
-            res.status(200).send('hi')
-        })
+const app = express();
+const PORT = 3000;
 
-        // Start the server
-        app.listen(PORT, () => {
-            console.log(`Server is running on http://localhost:${PORT}`);
-        });
+// Chỉ định đường dẫn đến binary FFmpeg tĩnh
+ffmpeg.setFfmpegPath(ffmpegStatic);
+
+// Đặt URL video nguồn cố định tại đây
+const SOURCE_VIDEO_URL = "https://phu-nine.vercel.app/api/download/?url=https://youtu.be/1bZtCt_Siro?si=i2NQWnKbYqmMK7Ud";
+// Thay thế URL mẫu trên bằng liên kết video thực tế của bạn
+
+// Sử dụng phương thức GET để truy cập trực tiếp việc chuyển đổi
+app.get('/vid', (req, res) => {
+    console.log(`Starting conversion for specific URL: ${SOURCE_VIDEO_URL}`);
+
+    // Đặt header cho phản hồi để trình duyệt biết đây là tệp MP4 có thể tải xuống
+    res.set({
+        'Content-Type': 'video/mp4',
+        'Content-Disposition': 'attachment; filename="specific_converted_video.mp4"'
+    });
+
+    ffmpeg(SOURCE_VIDEO_URL) // Truyền trực tiếp URL cố định làm nguồn đầu vào
+        .toFormat('mp4')
+        .videoCodec('libx264') // Sử dụng codec h264
+        .audioCodec('aac')    // Sử dụng codec AAC
+        // Tùy chọn này giúp phát trực tiếp MP4 tốt hơn
+        .outputOptions('-movflags frag_keyframe+empty_moov')
+        .on('start', (commandLine) => {
+            console.log('Spawned Ffmpeg command: ' + commandLine);
+        })
+        .on('error', (err, stdout, stderr) => {
+            console.error('An error occurred: ' + err.message);
+            if (!res.headersSent) {
+                res.status(500).send('Video conversion failed.');
+            }
+        })
+        .on('end', () => {
+            console.log('Conversion finished and stream closed');
+        })
+        .pipe(res, { end: true }); // Chuyển luồng đầu ra trực tiếp đến phản hồi Express
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
