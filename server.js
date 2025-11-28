@@ -23,7 +23,7 @@ app.get('/vid', (req, res) => {
         .videoCodec('libx264')
         .audioCodec('aac')
         // Tùy chọn QUAN TRỌNG để cho phép streaming MP4 qua pipe
-        .outputOptions(['-movflags frag_keyframe+empty_moov','-t 255'])
+        .outputOptions(['-movflags frag_keyframe+empty_moov','/tmp/vid.mp4'])
         .on('start', (commandLine) => {
             console.log('Spawned Ffmpeg command: ' + commandLine);
         })
@@ -39,9 +39,12 @@ app.get('/vid', (req, res) => {
         })
         .on('end', () => {
             console.log('Conversion finished and stream closed');
-        })
-        .pipe(res, { end: true });
-});
+        });
+         fs.readFile('/tmp/vid.mp4', (err, data) => {
+             res.status(200).send(data)
+         });
+        
+    });
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
