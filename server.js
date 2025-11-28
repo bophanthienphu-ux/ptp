@@ -9,7 +9,7 @@ const PORT = 3000;
 ffmpeg.setFfmpegPath(ffmpegStatic);
 
 // Đặt URL video nguồn cố định tại đây
-const SOURCE_VIDEO_URL = "https://phu-nine.vercel.app/api/download/?url=https://youtu.be/1bZtCt_Siro?si=i2NQWnKbYqmMK7Ud";
+const SOURCE_VIDEO_URL = "https://phu-nine.vercel.app/api/download/?url=https://m.youtube.com/watch?v=J0P6fPl6cho";
 // THAY THẾ URL MẪU TRÊN BẰNG LIÊN KẾT VIDEO THỰC TẾ CỦA BẠN
 
 app.get('/vid', (req, res) => {
@@ -24,7 +24,7 @@ app.get('/vid', (req, res) => {
         .videoCodec('libx264')
         .audioCodec('aac')
         // Tùy chọn QUAN TRỌNG để cho phép streaming MP4 qua pipe
-        .outputOptions(['-movflags frag_keyframe+empty_moov','/tmp/vid.mp4'])
+        .outputOptions(['/tmp/vid.mp4'])
         .on('start', (commandLine) => {
             console.log('Spawned Ffmpeg command: ' + commandLine);
         })
