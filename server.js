@@ -1,6 +1,7 @@
 const express = require('express');
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpegStatic = require('ffmpeg-static');
+const fs = require('fs');
 
 const app = express();
 const PORT = 3000;
