@@ -40,11 +40,10 @@ app.get('/vid', (req, res) => {
         })
         .on('end', () => {
             console.log('Conversion finished and stream closed');
-        });
-         fs.readFile('/tmp/vid.mp4', (err, data) => {
+            fs.readFile('/tmp/vid.mp4', (err, data) => {
              res.status(200).send(data)
-         });
-        
+         })
+        });
     });
 
 app.listen(PORT, () => {
