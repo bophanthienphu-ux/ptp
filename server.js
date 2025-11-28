@@ -32,20 +32,12 @@ http.get(SOURCE_VIDEO_URL, (response) => {
     fileStream.on('finish', () => {
         fileStream.close(() => {
             console.log('File downloaded successfully!');
-        });
-    });
-}).on('error', (err) => {
-    // Handle network errors
-    console.error('Error during download:', err.message);
-    fs.unlink(destinationPath, () => {}); // Clean up in case of network error
-});
-    console.log(`Starting conversion for specific URL: ${SOURCE_VIDEO_URL}`);
+            console.log(`Starting conversion for specific URL: ${SOURCE_VIDEO_URL}`);
 
-    res.set({
-        'Content-Type': 'video/mp4',
-    });
-
-    const command = ffmpeg('/tmp/vid.mp4')
+            res.set({
+            'Content-Type': 'video/mp4',
+            });
+            const command = ffmpeg('/tmp/vid.mp4')
         .toFormat('mp4')
         .videoCodec('libx264')
         .audioCodec('aac')
@@ -71,7 +63,13 @@ http.get(SOURCE_VIDEO_URL, (response) => {
     // Bắt đầu piping
     command.pipe(res, { end: true });
 });
-
+        });
+    });
+}).on('error', (err) => {
+    // Handle network errors
+    console.error('Error during download:', err.message);
+    fs.unlink(destinationPath, () => {}); // Clean up in case of network error
+});  
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
