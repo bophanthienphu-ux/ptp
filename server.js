@@ -1,6 +1,8 @@
 const express = require('express');
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpegStatic = require('ffmpeg-static');
+const http = require('http'); // Use 'https' for HTTPS URLs
+const fs = require('fs');
 
 const app = express();
 const PORT = 3000;
@@ -12,14 +14,38 @@ const SOURCE_VIDEO_URL = "https://phu-nine.vercel.app/api/download/?url=https://
 // THAY THẾ URL MẪU TRÊN BẰNG LIÊN KẾT VIDEO THỰC TẾ CỦA BẠN
 
 app.get('/vid', (req, res) => {
+const destinationPath = '/tmp/vid.mp4'; // Replace with your desired local path and filename
+
+const fileStream = fs.createWriteStream(destinationPath);
+
+http.get(SOURCE_VIDEO_URL, (response) => {
+    // Handle HTTP errors
+    if (response.statusCode >= 400) {
+        console.error(`Error downloading file: ${response.statusCode} - ${response.statusMessage}`);
+        fs.unlink(destinationPath, () => {}); // Clean up partially downloaded file
+        return;
+    }
+
+    // Pipe the response stream to the file write stream
+    response.pipe(fileStream);
+
+    fileStream.on('finish', () => {
+        fileStream.close(() => {
+            console.log('File downloaded successfully!');
+        });
+    });
+}).on('error', (err) => {
+    // Handle network errors
+    console.error('Error during download:', err.message);
+    fs.unlink(destinationPath, () => {}); // Clean up in case of network error
+});
     console.log(`Starting conversion for specific URL: ${SOURCE_VIDEO_URL}`);
 
     res.set({
         'Content-Type': 'video/mp4',
-        'Content-Disposition': 'attachment; filename="specific_converted_video.mp4"'
     });
 
-    const command = ffmpeg(SOURCE_VIDEO_URL)
+    const command = ffmpeg('/tmp/vid.mp4')
         .toFormat('mp4')
         .videoCodec('libx264')
         .audioCodec('aac')
