@@ -37,7 +37,7 @@ http.get(SOURCE_VIDEO_URL, (response) => {
             res.set({
             'Content-Type': 'video/mp4',
             });
-            const command = ffmpeg('/tmp/vid.mp4')
+            const command = ffmpeg(SOURCE_VIDEO_URL)
         .toFormat('mp4')
         .videoCodec('libx264')
         .audioCodec('aac')
