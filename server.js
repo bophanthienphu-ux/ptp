@@ -24,7 +24,7 @@ app.get('/vid', (req, res) => {
         .videoCodec('libx264')
         .audioCodec('aac')
         // Thêm tùy chọn để cải thiện khả năng tương thích khi streaming đến pipe
-        .outputOptions(['-movflags frag_keyframe+empty_moov','-crf 5'])
+        .outputOptions(['-movflags frag_keyframe+empty_moov','-crf 23','-shortest'])
         .on('start', (commandLine) => {
             console.log('Spawned Ffmpeg command: ' + commandLine);
         })
