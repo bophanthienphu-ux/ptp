@@ -1,7 +1,7 @@
 const express = require('express');
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpegStatic = require('ffmpeg-static');
-const http = require('http'); // Use 'https' for HTTPS URLs
+const http = require('https'); // Use 'https' for HTTPS URLs
 const fs = require('fs');
 
 const app = express();
