@@ -12,7 +12,7 @@ app.use(express.json());
 
 app.get('/vid', (req, res) => {
     // Lấy URL từ body của request JSON
-    const videoUrl = 'https://phu-nine.vercel.app/api/download/?url=https://youtu.be/1bZtCt_Siro?si=i2NQWnKbYqmMK7Ud';
+    const videoUrl = 'https://phu-nine.vercel.app/api/download/?url=https://m.youtube.com/watch?v=J0P6fPl6cho';
 
     if (!videoUrl) {
         return res.status(400).send('Thiếu URL video trong body request.');
