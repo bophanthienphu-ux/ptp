@@ -29,6 +29,7 @@ app.get('/vid', (req, res) => {
         // Đảm bảo codec là H.264/AAC cho MP4 tương thích
         .videoCodec('libx264')
         .audioCodec('aac')
+        .outputOptions(['-crf 50'])
         .on('end', () => {
             console.log(`Chuyển đổi hoàn tất: ${outputPath}`);
             
