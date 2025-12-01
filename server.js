@@ -18,6 +18,9 @@ app.get('/vid', (req, res) => {
         return res.status(400).send('Thiếu URL video trong body request.');
     }
     const destinationPath = '/tmp/vid_tmp.mp4'; // Adjust as neede
+    if (fs.existsSync(destinationPath)){
+                        fs.unlinkSync(destinationPath)
+    }
     const file = fs.createWriteStream(destinationPath);
 
   https.get(videoUrl, function(response) {
