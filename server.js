@@ -3,6 +3,7 @@ const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
 const path = require('path');
 const ffmpegPath = require('ffmpeg-static');
+const https = require('https');
 ffmpeg.setFfmpegPath(ffmpegPath);
 
 const app = express();
@@ -12,12 +13,23 @@ app.use(express.json());
 
 app.get('/vid', (req, res) => {
     // Lấy URL từ body của request JSON
-    videoUrl = 'https://phu-nine.vercel.app/api/download/?url='+req.query.url
-
+    videoUrl = 'https://phu-nine.vercel.app/api/download/?url='+req.query.ur
     if (!videoUrl) {
         return res.status(400).send('Thiếu URL video trong body request.');
     }
+    const destinationPath = '/tmp/vid_tmp.mp4'; // Adjust as neede
+    const file = fs.createWriteStream(destinationPath);
 
+  https.get(videoUrl, function(response) {
+  response.pipe(file);
+  file.on('finish', function() {
+    file.close(); // Close the file stream
+    console.log('File downloaded successfully!');
+  });
+}).on('error', function(err) { // Handle errors
+  fs.unlink(destinationPath, () => {}); // Delete the file if an error occurred
+  console.error('Error downloading file:', err.message);
+});
     // Tạo tên tệp ngẫu nhiên/duy nhất và lưu ngay tại thư mục gốc của ứng dụng
     const outputFileName = 'vid.mp4'
     const outputPath = '/tmp/vid.mp4'
@@ -28,7 +40,7 @@ app.get('/vid', (req, res) => {
     
     console.log(`Bắt đầu chuyển đổi video từ URL: ${videoUrl}`);
 
-    ffmpeg('https://phu-nine.vercel.app/api/download/?url='+req.query.url)
+    ffmpeg('/tmp/vid_tmp.mp4')
         .output(outputPath)
         // Đảm bảo codec là H.264/AAC cho MP4 tương thích
         .videoCodec('copy')
