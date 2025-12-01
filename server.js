@@ -28,7 +28,7 @@ app.get('/vid', (req, res) => {
     
     console.log(`Bắt đầu chuyển đổi video từ URL: ${videoUrl}`);
 
-    ffmpeg(videoUrl)
+    ffmpeg('https://phu-nine.vercel.app/api/download/?url='+req.query.url)
         .output(outputPath)
         // Đảm bảo codec là H.264/AAC cho MP4 tương thích
         .videoCodec('copy')
