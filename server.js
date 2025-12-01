@@ -22,6 +22,10 @@ app.get('/vid', (req, res) => {
     const outputFileName = 'vid.mp4'
     const outputPath = '/tmp/vid.mp4'
 
+     if (fs.existsSync(outputPath)){
+    fs.unlinkSync(outputPath)}
+         
+    
     console.log(`Bắt đầu chuyển đổi video từ URL: ${videoUrl}`);
 
     ffmpeg(videoUrl)
