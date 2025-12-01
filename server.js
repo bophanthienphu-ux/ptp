@@ -25,17 +25,8 @@ app.get('/vid', (req, res) => {
   file.on('finish', function() {
     file.close(); // Close the file stream
     console.log('File downloaded successfully!');
-  });
-}).on('error', function(err) { // Handle errors
-  fs.unlink(destinationPath, () => {}); // Delete the file if an error occurred
-  console.error('Error downloading file:', err.message);
-});
-    // Tạo tên tệp ngẫu nhiên/duy nhất và lưu ngay tại thư mục gốc của ứng dụng
     const outputFileName = 'vid.mp4'
     const outputPath = '/tmp/vid.mp4'
-
-     if (fs.existsSync(outputPath)){
-    fs.unlinkSync(outputPath)}
          
     
     console.log(`Bắt đầu chuyển đổi video từ URL: ${videoUrl}`);
@@ -71,6 +62,12 @@ app.get('/vid', (req, res) => {
             }
         })
         .run();
+  });
+}).on('error', function(err) { // Handle errors
+  fs.unlink(destinationPath, () => {}); // Delete the file if an error occurred
+  console.error('Error downloading file:', err.message);
+});
+    // Tạo tên tệp ngẫu nhiên/duy nhất và lưu ngay tại thư mục gốc của ứng dụng
 });
 
 app.listen(PORT, () => {
