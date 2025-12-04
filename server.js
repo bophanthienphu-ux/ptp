@@ -18,7 +18,7 @@ app.get('/vid', (req, res) => {
     if (!videoUrl) {
         return res.status(400).send('Thiếu URL video trong body request.');
     }
-    const destinationPath = '/tmp/.vid_tmp.mp4'; // Adjust as neede
+    const destinationPath = '/tmp/vid_tmp.mp4'; // Adjust as neede
     if (fs.existsSync(destinationPath)){
                         fs.unlinkSync(destinationPath)
     }
