@@ -17,7 +17,7 @@ app.get('/vid', (req, res) => {
     if (!videoUrl) {
         return res.status(400).send('Thiếu URL video trong body request.');
     }
-    const destinationPath = '/tmp/vid_tmp.mp4'; // Adjust as neede
+    const destinationPath = '/var/tmp/vid_tmp.mp4'; // Adjust as neede
     if (fs.existsSync(destinationPath)){
                         fs.unlinkSync(destinationPath)
     }
@@ -29,12 +29,12 @@ app.get('/vid', (req, res) => {
     file.close(); // Close the file stream
     console.log('File downloaded successfully!');
     const outputFileName = 'vid.mp4'
-    const outputPath = '/tmp/vid.mp4'
+    const outputPath = '/var/tmp/vid.mp4'
          
     
     console.log(`Bắt đầu chuyển đổi video từ URL: ${videoUrl}`);
 
-    ffmpeg('/tmp/vid_tmp.mp4')
+    ffmpeg('/var/tmp/vid_tmp.mp4')
         .output(outputPath)
         // Đảm bảo codec là H.264/AAC cho MP4 tương thích
         .videoCodec('libx264')
