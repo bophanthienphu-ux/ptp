@@ -51,7 +51,7 @@ app.get('/vid', (req, res) => {
                     // Nếu đã gửi headers rồi thì không thể gửi lỗi 500 nữa
                 }
                 
-    exec('ls -la', (error, stdout, stderr) => {
+    exec('ls -la /tmp', (error, stdout, stderr) => {
       if (error) {
         console.error(`exec error: ${error}`);
         return;
