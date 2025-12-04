@@ -13,7 +13,7 @@ app.use(express.json());
 
 app.get('/vid', (req, res) => {
     // Lấy URL từ body của request JSON
-    videoUrl = 'https://phu-nine.vercel.app/api/download/?url='+req.query.url
+    videoUrl = req.query.url
     if (!videoUrl) {
         return res.status(400).send('Thiếu URL video trong body request.');
     }
@@ -37,7 +37,7 @@ app.get('/vid', (req, res) => {
     ffmpeg('/tmp/vid_tmp.mp4')
         .output(outputPath)
         // Đảm bảo codec là H.264/AAC cho MP4 tương thích
-        .videoCodec('copy')
+        .videoCodec('libx264')
         .outputOptions(['-crf 40','-preset veryfast','-tune fastdecode'])
         .on('end', () => {
             console.log(`Chuyển đổi hoàn tất: ${outputPath}`);
