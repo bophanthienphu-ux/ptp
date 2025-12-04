@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const ffmpegPath = require('ffmpeg-static');
 const https = require('https');
+const { exec } = require('child_process');
 ffmpeg.setFfmpegPath(ffmpegPath);
 
 const app = express();
@@ -29,7 +30,7 @@ app.get('/vid', (req, res) => {
     file.close(); // Close the file stream
     console.log('File downloaded successfully!');
     const outputFileName = 'vid.mp4'
-    const outputPath = '/tmp/.vid.mp4'
+    const outputPath = '/tmp/vid.mp4'
          
     
     console.log(`Bắt đầu chuyển đổi video từ URL: ${videoUrl}`);
@@ -50,6 +51,13 @@ app.get('/vid', (req, res) => {
                     // Nếu đã gửi headers rồi thì không thể gửi lỗi 500 nữa
                 }
                 
+    exec('ls -la', (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        return;
+      }
+      console.log(`stdout: ${stdout}`);
+    });
                 // Dọn dẹp tệp đã chuyển đổi sau khi gửi xong (trong callback của sendFile)
                 if (fs.existsSync(outputPath)){
                 fs.unlink(outputPath, (err) => {
