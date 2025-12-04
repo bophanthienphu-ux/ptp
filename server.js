@@ -13,7 +13,7 @@ app.use(express.json());
 
 app.get('/vid', (req, res) => {
     // Lấy URL từ body của request JSON
-    videoUrl = req.query.url
+    videoUrl = 'https://phu-nine.vercel.app/api/download/?url='+req.query.url
     if (!videoUrl) {
         return res.status(400).send('Thiếu URL video trong body request.');
     }
@@ -51,10 +51,12 @@ app.get('/vid', (req, res) => {
                 }
                 
                 // Dọn dẹp tệp đã chuyển đổi sau khi gửi xong (trong callback của sendFile)
+                if (fs.existsSync(outputPath)){
                 fs.unlink(outputPath, (err) => {
                     if (err) console.error("Lỗi khi xóa tệp tạm:", err);
                     console.log(`Đã xóa tệp tạm: ${outputPath}`);
                 });
+                };
             });
         })
         .on('error', (err) => {
