@@ -69,8 +69,7 @@ app.get('/vid', (req, res) => {
             res.writeHead(200, head);
             fs.createReadStream(videoPath).pipe(res);
         }
-    });
-                })
+                
                 
     exec('ls -la /tmp', (error, stdout, stderr) => {
       if (error) {
