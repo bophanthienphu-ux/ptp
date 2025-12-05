@@ -34,7 +34,7 @@ https.get(videoUrl, (response) => {
 
   file.on('finish', () => {
     file.close(); // Close the file stream when writing is complete
-    console.log(`File downloaded successfully to ${localFilePath}`);
+    console.log('File downloaded');
       ffmpeg('/tmp/vid.mp4') // Input is the stream from axios
             .videoCodec('copy') // Convert to AVI format (example)
             .on('error', (err) => {
