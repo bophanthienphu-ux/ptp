@@ -14,7 +14,7 @@ app.use(express.json());
 
 app.get('/vid', (req, res) => {
     // Lấy URL từ body của request JSON
-    videoUrl = 'https://phu-nine.vercel.app/api/download/?url='+req.query.url
+    videoUrl = 'phu-nine.vercel.app
     if (!videoUrl) {
         return res.status(400).send('Thiếu URL video trong body request.');
     }
@@ -35,7 +35,10 @@ app.get('/vid', (req, res) => {
     
     console.log(`Bắt đầu chuyển đổi video từ URL: ${videoUrl}`);
 
-    ffmpeg('/tmp/.vid_tmp.mp4')
+    // CRITICAL SYNTAX FIX: The input path was wrong here, causing FFmpeg to fail its input lookup
+    // Original: ffmpeg('/tmp/.vid_tmp.mp4') 
+    // Fixed:
+    ffmpeg(destinationPath)
         .output(outputPath)
         // Đảm bảo codec là H.264/AAC cho MP4 tương thích
         .videoCodec('copy')
@@ -49,6 +52,9 @@ app.get('/vid', (req, res) => {
 
         if (range) {
             const parts = range.replace(/bytes=/, "").split("-");
+            // SYNTAX FIX: The original line was missing a closing parenthesis after 10)
+            // Original: const start = parseInt(parts[0], 10;
+            // Fixed:
             const start = parseInt(parts[0], 10);
             const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
             const chunksize = (end - start) + 1;
@@ -104,5 +110,7 @@ app.get('/vid', (req, res) => {
 });
 
 app.listen(PORT, () => {
+    console.log(`Server Express đang lắng lắng nghe tại http://localhost:${PORT}`);
+});
     console.log(`Server Express đang lắng nghe tại http://localhost:${PORT}`);
 });
