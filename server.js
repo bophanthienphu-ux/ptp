@@ -31,7 +31,13 @@ app.get('/vid', async (req, res) => {
             url: videoUrl,
             responseType: 'stream',
         });
-        fs.writeFile('/tmp/vid.mp4',response.data)
+        fs.writeFile('/tmp/vid.mp4',response.data, (err) => {
+  if (err) {
+    console.error('Error writing file:', err);
+  } else {
+    console.log('File written successfully!');
+  }
+});
         // 4. Pipe the incoming video stream through FFmpeg for conversion and directly to the response
         ffmpeg('/tmp/vid.mp4') // Input is the stream from axios
             .videoCodec('copy') // Convert to AVI format (example)
