@@ -2,6 +2,7 @@ const express = require('express');
 const ffmpeg = require('fluent-ffmpeg');
 const axios = require('axios');
 const app = express();
+const fs = require('fs');
 const port = 3000;
 
 // Ensure ffmpeg path is set if not in system PATH
