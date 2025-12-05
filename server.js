@@ -33,7 +33,7 @@ app.get('/vid', async (req, res) => {
 
         // 4. Pipe the incoming video stream through FFmpeg for conversion and directly to the response
         ffmpeg(response.data) // Input is the stream from axios
-            .outputFormat('avi') // Convert to AVI format (example)
+            .outputFormat('copy') // Convert to AVI format (example)
             .on('error', (err) => {
                 console.error('FFmpeg error:', err.message);
                 if (!res.headersSent) {
