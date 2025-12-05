@@ -35,17 +35,7 @@ https.get(videoUrl, (response) => {
   file.on('finish', () => {
     file.close(); // Close the file stream when writing is complete
     console.log(`File downloaded successfully to ${localFilePath}`);
-  });
-
-  file.on('error', (err) => {
-    fs.unlink(localFilePath, () => {}); // Delete the file if an error occurs during writing
-    console.error('Error writing file:', err);
-  });
-}).on('error', (err) => {
-  console.error('Error downloading file:', err);
-});
-        // 4. Pipe the incoming video stream through FFmpeg for conversion and directly to the response
-        ffmpeg('/tmp/vid.mp4') // Input is the stream from axios
+      ffmpeg('/tmp/vid.mp4') // Input is the stream from axios
             .videoCodec('copy') // Convert to AVI format (example)
             .on('error', (err) => {
                 console.error('FFmpeg error:', err.message);
@@ -56,8 +46,18 @@ https.get(videoUrl, (response) => {
             .on('end', () => {
                 console.log('Conversion finished and streamed to client');
             })
-            .pipe(res, { end: true }); // Pipe the output directly to the Express response stream
+            .pipe(res, { end: true });
+  });
 
+  file.on('error', (err) => {
+    fs.unlink(localFilePath, () => {}); // Delete the file if an error occurs during writing
+    console.error('Error writing file:', err);
+  });
+}).on('error', (err) => {
+  console.error('Error downloading file:', err);
+});
+        // 4. Pipe the incoming video stream through FFmpeg for conversion and directly to the response
+         // Pipe the output directly to the Express response stre
     } catch (error) {
         console.error('Download or streaming error:', error.message);
         if (!res.headersSent) {
