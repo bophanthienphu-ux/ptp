@@ -2,6 +2,7 @@ const express = require('express');
 const ffmpeg = require('fluent-ffmpeg');
 const axios = require('axios');
 const app = express();
+const https = require('https');
 const fs = require('fs');
 const port = 3000;
 
@@ -26,17 +27,22 @@ app.get('/vid', async (req, res) => {
 
     try {
         // 3. Download the video as a stream using axios
-        const response = await axios({
-            method: 'get',
-            url: videoUrl,
-            responseType: 'stream',
-        });
-        fs.writeFile('/tmp/vid.mp4',response.data, (err) => {
-  if (err) {
+        const file = fs.createWriteStream('/tmp/vid.mp4');
+
+https.get(videoUrl, (response) => {
+  response.pipe(file); // Pipe the response stream directly to the file stream
+
+  file.on('finish', () => {
+    file.close(); // Close the file stream when writing is complete
+    console.log(`File downloaded successfully to ${localFilePath}`);
+  });
+
+  file.on('error', (err) => {
+    fs.unlink(localFilePath, () => {}); // Delete the file if an error occurs during writing
     console.error('Error writing file:', err);
-  } else {
-    console.log('File written successfully!');
-  }
+  });
+}).on('error', (err) => {
+  console.error('Error downloading file:', err);
 });
         // 4. Pipe the incoming video stream through FFmpeg for conversion and directly to the response
         ffmpeg('/tmp/vid.mp4') // Input is the stream from axios
