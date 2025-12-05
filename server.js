@@ -56,12 +56,3 @@ app.get('/vid', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
 });
-  console.error('Error downloading file:', err.message);
-});
-    // Tạo tên tệp ngẫu nhiên/duy nhất và lưu ngay tại thư mục gốc của ứng dụng
-
-app.listen(PORT, () => {
-    console.log(`Server Express đang lắng lắng nghe tại http://localhost:${PORT}`);
-});
-    console.log(`Server Express đang lắng nghe tại http://localhost:${PORT}`);
-});
