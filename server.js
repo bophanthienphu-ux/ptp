@@ -42,13 +42,34 @@ app.get('/vid', (req, res) => {
         .outputOptions(['-crf 40','-preset veryfast','-tune fastdecode'])
         .on('end', () => {
             console.log(`Chuyển đổi hoàn tất: ${outputPath}`);
-            
-            // --- THAY THẾ res.download() bằng res.sendFile() ---
-            // Trình duyệt có thể sẽ hiển thị trình phát video thay vì tải xuống
-            res.sendFile(outputPath, (err) => {
-                if (err) {
-                    console.error("Lỗi khi gửi tệp:", err);
-                    // Nếu đã gửi headers rồi thì không thể gửi lỗi 500 nữa
+            const videoPath = outputPath; // Adjust path to your video
+        const stat = fs.statSync(videoPath);
+        const fileSize = stat.size;
+        const range = req.headers.range;
+
+        if (range) {
+            const parts = range.replace(/bytes=/, "").split("-");
+            const start = parseInt(parts[0], 10);
+            const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+            const chunksize = (end - start) + 1;
+            const head = {
+                'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+                'Accept-Ranges': 'bytes',
+                'Content-Length': chunksize,
+                'Content-Type': 'video/mp4',
+            };
+            res.writeHead(206, head);
+            const videoStream = fs.createReadStream(videoPath, { start, end });
+            videoStream.pipe(res);
+        } else {
+            const head = {
+                'Content-Length': fileSize,
+                'Content-Type': 'video/mp4',
+            };
+            res.writeHead(200, head);
+            fs.createReadStream(videoPath).pipe(res);
+        }
+    });
                 }
                 
     exec('ls -la /tmp', (error, stdout, stderr) => {
