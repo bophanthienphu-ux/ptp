@@ -37,7 +37,7 @@ https.get(videoUrl, (response) => {
     console.log('File downloaded');
       ffmpeg('/tmp/vid.mp4') // Input is the stream from axios
             .videoCodec('copy') // Convert to AVI format (example)
-            .output(res, { end: true });
+            .output(res, { end: true })
             .on('error', (err) => {
                 console.error('FFmpeg error:', err.message);
                 if (!res.headersSent) {
