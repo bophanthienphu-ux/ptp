@@ -22,7 +22,7 @@ app.get('/vid', async (req, res) => {
     }
 
     // 2. Set response headers for a video file download
-    res.setHeader('Content-Type', 'video/mp4'); // MIME type for .avi (adjust based on output format)
+     // MIME type for .avi (adjust based on output format)
     // Note: Streaming dynamically generated content means content-length is unknown beforehand
 
     try {
@@ -37,7 +37,7 @@ https.get(videoUrl, (response) => {
     console.log('File downloaded');
       ffmpeg('/tmp/vid.mp4') // Input is the stream from axios
             .videoCodec('copy') // Convert to AVI format (example)
-            .output(res, { end: true })
+            .output('/tmp/vid_1.mp4')
             .on('error', (err) => {
                 console.error('FFmpeg error:', err.message);
                 if (!res.headersSent) {
@@ -49,11 +49,8 @@ https.get(videoUrl, (response) => {
             })
             .run();
   });
-
-  file.on('error', (err) => {
-    fs.unlink(localFilePath, () => {}); // Delete the file if an error occurs during writing
-    console.error('Error writing file:', err);
-  });
+  res.setHeader('Content-Type', 'video/mp4').status(200)
+  fs.createReadStream('/tmp/vid_1.mp4').pipe(res)
 }).on('error', (err) => {
   console.error('Error downloading file:', err);
 });
