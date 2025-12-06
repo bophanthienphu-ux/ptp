@@ -46,7 +46,7 @@ https.get(videoUrl, (response) => {
             .on('end', () => {
                 console.log('Conversion finished and streamed to client');
             })
-            .pipe(res, { end: true });
+            .output(res, { end: true });
   });
 
   file.on('error', (err) => {
