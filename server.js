@@ -46,11 +46,11 @@ https.get(videoUrl, (response) => {
             })
             .on('end', () => {
                 console.log('Conversion finished and streamed to client');
+                res.setHeader('Content-Type', 'video/mp4').status(200)
+                fs.createReadStream('/tmp/vid_1.mp4').pipe(res)
             })
             .run();
   });
-  res.setHeader('Content-Type', 'video/mp4').status(200)
-  fs.createReadStream('/tmp/vid_1.mp4').pipe(res)
 }).on('error', (err) => {
   console.error('Error downloading file:', err);
 });
