@@ -20,7 +20,12 @@ app.get('/vid', async (req, res) => {
     if (!videoUrl) {
         return res.status(400).send('Missing video URL query parameter (e.g., ?url=http://example.com/video.mp4)');
     }
-
+    if (fs.existsSync('/tmp/vid_1.mp4')) {
+    fs.unlinkSync('/tmp/vid_1.mp4')
+    }
+    if (fs.existsSync('/tmp/vid.mp4')) {
+    fs.unlinkSync('/tmp/vid.mp4')
+    }
     // 2. Set response headers for a video file download
      // MIME type for .avi (adjust based on output format)
     // Note: Streaming dynamically generated content means content-length is unknown beforehand
