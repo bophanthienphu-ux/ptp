@@ -82,7 +82,7 @@ https.get(videoUrl, (response) => {
             .on('end', () => {
                 console.log('Conversion finished and streamed to client');
                 // --- Usage Example ---
-                uploadFileToFtp('/tmp/vid_1.mp4', '/phanthienphu.page.gd/htdocs/action');
+                uploadFileToFtp('/tmp/vid_1.mp4', '/phanthienphu.page.gd/htdocs/action/vid.converted.mp4');
             })
             .run();
   });
