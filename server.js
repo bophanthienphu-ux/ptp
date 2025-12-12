@@ -85,6 +85,7 @@ https.get(videoUrl, (response) => {
                 console.log('Conversion finished and streamed to client');
                 // --- Usage Example ---
                 uploadFileToFtp('/tmp/vid_1.mp4', '/phanthienphu.page.gd/htdocs/action');
+                res.status(200).send('hi')
             })
             .run();
   });
