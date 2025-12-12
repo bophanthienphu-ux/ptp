@@ -56,7 +56,7 @@ https.get(videoUrl, (response) => {
                 async function uploadFileToFtp(localFilePath, remoteFilePath) {
     const client = new ftp.Client();
     // Enable verbose logging for debugging if needed
-    client.ftp.verbose = true; 
+    
 
     try {
         // Connect to the FTP server
