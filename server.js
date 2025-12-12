@@ -6,8 +6,6 @@ const app = express();
 const https = require('https');
 const fs = require('fs');
 const port = 3000;
-const ftp = require('basic-ftp');
-const fs = require('fs');
 
 async function uploadFileToFtp(localFilePath, remoteFilePath) {
     const client = new ftp.Client();
