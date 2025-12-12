@@ -10,7 +10,7 @@ const port = 3000;
 async function uploadFileToFtp(localFilePath, remoteFilePath) {
     const client = new ftp.Client();
     // Enable verbose logging for debugging if needed
-    // client.ftp.verbose = true; 
+    client.ftp.verbose = true; 
 
     try {
         // Connect to the FTP server
