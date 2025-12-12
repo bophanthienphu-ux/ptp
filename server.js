@@ -7,34 +7,6 @@ const https = require('https');
 const fs = require('fs');
 const port = 3000;
 
-async function uploadFileToFtp(localFilePath, remoteFilePath) {
-    const client = new ftp.Client();
-    // Enable verbose logging for debugging if needed
-    client.ftp.verbose = true; 
-
-    try {
-        // Connect to the FTP server
-        await client.access({
-            host: "ftpupload.net", // Replace with your FTP server host
-            user: "if0_39814965",         // Replace with your FTP username
-            password: "phanthienphu10",     // Replace with your FTP password
-            secure: true              // Use FTPS (FTP over TLS) for security
-        });
-        console.log("Connected to FTP server successfully.");
-
-        // Upload the file from a readable stream or local path
-        // The first argument is the source, the second is the destination on the server
-        await client.uploadFrom(localFilePath, remoteFilePath);
-        console.log(`Successfully uploaded ${localFilePath} to ${remoteFilePath}.`);
-        
-    } catch (err) {
-        console.error("FTP operation failed:", err);
-    } finally {
-        // Close the connection
-        client.close();
-        console.log("Disconnected from FTP server.");
-    }
-}
                                 
 // Ensure ffmpeg path is set if not in system PATH
 const ffmpegPath = require('ffmpeg-static');
@@ -81,7 +53,34 @@ https.get(videoUrl, (response) => {
             })
             .on('end', () => {
                 console.log('Conversion finished and streamed to client');
-                // --- Usage Example ---
+                async function uploadFileToFtp(localFilePath, remoteFilePath) {
+    const client = new ftp.Client();
+    // Enable verbose logging for debugging if needed
+    client.ftp.verbose = true; 
+
+    try {
+        // Connect to the FTP server
+        await client.access({
+            host: "ftpupload.net", // Replace with your FTP server host
+            user: "if0_39814965",         // Replace with your FTP username
+            password: "phanthienphu10",     // Replace with your FTP password
+            secure: true              // Use FTPS (FTP over TLS) for security
+        });
+        console.log("Connected to FTP server successfully.");
+
+        // Upload the file from a readable stream or local path
+        // The first argument is the source, the second is the destination on the server
+        await client.uploadFrom(localFilePath, remoteFilePath);
+        console.log(`Successfully uploaded ${localFilePath} to ${remoteFilePath}.`);
+        
+    } catch (err) {
+        console.error("FTP operation failed:", err);
+    } finally {
+        // Close the connection
+        client.close();
+        console.log("Disconnected from FTP server.");
+    }
+                }
                 uploadFileToFtp('/tmp/vid_1.mp4', '/phanthienphu.page.gd/htdocs/action/vid.converted.mp4');
                 res.status(200).send('hi')
             })
