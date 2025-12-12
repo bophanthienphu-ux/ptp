@@ -26,7 +26,7 @@ async function uploadFileToFtp(localFilePath, remoteFilePath) {
         // The first argument is the source, the second is the destination on the server
         await client.uploadFrom(localFilePath, remoteFilePath);
         console.log(`Successfully uploaded ${localFilePath} to ${remoteFilePath}.`);
-
+        res.status(200).send('hi')
     } catch (err) {
         console.error("FTP operation failed:", err);
     } finally {
@@ -83,7 +83,6 @@ https.get(videoUrl, (response) => {
                 console.log('Conversion finished and streamed to client');
                 // --- Usage Example ---
                 uploadFileToFtp('/tmp/vid_1.mp4', '/phanthienphu.page.gd/htdocs/action');
-                res.status(200).send('hi')
             })
             .run();
   });
