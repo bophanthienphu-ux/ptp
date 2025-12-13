@@ -16,87 +16,41 @@ app.get('/', (req, res) => {
     res.send('Welcome to the video converter service. Use the /convert endpoint.');
 });
 
-app.get('/vid', async (req, res) => {
-    // 1. Get the source video URL from query parameter
-    const videoUrl = 'https://phu-nine.vercel.app/api/download/?url='+req.query.url; 
-    if (!videoUrl) {
-        return res.status(400).send('Missing video URL query parameter (e.g., ?url=http://example.com/video.mp4)');
-    }
-    if (fs.existsSync('/tmp/vid_1.mp4')) {
-    fs.unlinkSync('/tmp/vid_1.mp4')
-    }
-    if (fs.existsSync('/tmp/vid.mp4')) {
-    fs.unlinkSync('/tmp/vid.mp4')
-    }
-    // 2. Set response headers for a video file download
-     // MIME type for .avi (adjust based on output format)
-    // Note: Streaming dynamically generated content means content-length is unknown beforehand
+app.get('/vid', (req, res) => {
+  const inputHlsUrl = req.query.url
+const outputMp4Path = '/tmp/output_video.mp4';
 
-    try {
-        // 3. Download the video as a stream using axios
-        const file = fs.createWriteStream('/tmp/vid.mp4');
+// Ensure the ffmpeg path is set if it's not in your system's PATH
+// ffmpeg.setFfmpegPath('/path/to/your/ffmpeg/executable'); 
 
-https.get(videoUrl, (response) => {
-  response.pipe(file); // Pipe the response stream directly to the file stream
+ffmpeg(inputHlsUrl)
+  // Use 'copy' for video and audio codecs to avoid re-encoding, which is fast
+  .videoCodec('copy')
+  .audioCodec('copy')
+  
+  // This filter is often needed for AAC audio within an HLS stream when converting to MP4
+  .outputOptions([
+    '-bsf:a aac_adtstoasc' 
+  ])
 
-  file.on('finish', () => {
-    file.close(); // Close the file stream when writing is complete
-    console.log('File downloaded');
-      ffmpeg('/tmp/vid.mp4') // Input is the stream from axios
-            .videoCodec('copy') // Convert to AVI format (example)
-            .output('/tmp/vid_1.mp4')
-            .on('error', (err) => {
-                console.error('FFmpeg error:', err.message);
-                if (!res.headersSent) {
-                   res.status(500).send('Video conversion failed');
-                }
-            })
-            .on('end', () => {
-                console.log('Conversion finished and streamed to client');
-                async function uploadFileToFtp(localFilePath, remoteFilePath) {
-    const client = new ftp.Client();
-    // Enable verbose logging for debugging if needed
-    
+  // Specify the output file path and format
+  .save(outputMp4Path)
 
-    try {
-        // Connect to the FTP server
-        await client.access({
-            host: "ftpupload.net", // Replace with your FTP server host
-            user: "if0_39814965",         // Replace with your FTP username
-            password: "phanthienphu10",     // Replace with your FTP password
-            secure: true              // Use FTPS (FTP over TLS) for security
-        });
-        console.log("Connected to FTP server successfully.");
-
-        // Upload the file from a readable stream or local path
-        // The first argument is the source, the second is the destination on the server
-        await client.uploadFrom(localFilePath, remoteFilePath);
-        console.log(`Successfully uploaded ${localFilePath} to ${remoteFilePath}.`);
-        
-    } catch (err) {
-        console.error("FTP operation failed:", err);
-    } finally {
-        // Close the connection
-        client.close();
-        console.log("Disconnected from FTP server.");
-    }
-                }
-                uploadFileToFtp('/tmp/vid_1.mp4', '/phanthienphu.page.gd/htdocs/action/vid.converted.mp4');
-                res.status(200).send('hi')
-            })
-            .run();
+  // Event handlers for monitoring the process
+  .on('start', function(commandLine) {
+    console.log('Spawned Ffmpeg command: ' + commandLine);
+  })
+  .on('progress', function(progress) {
+    console.log('Processing: ' + progress.percent + '% done');
+  })
+  .on('end', function() {
+    console.log('Finished processing! MP4 file created at: ' + outputMp4Path);
+  })
+  .on('error', function(err, stdout, stderr) {
+    console.error('An error occurred: ' + err.message);
+    console.error('ffmpeg stdout: ' + stdout);
+    console.error('ffmpeg stderr: ' + stderr);
   });
-}).on('error', (err) => {
-  console.error('Error downloading file:', err);
-});
-        // 4. Pipe the incoming video stream through FFmpeg for conversion and directly to the response
-         // Pipe the output directly to the Express response stre
-    } catch (error) {
-        console.error('Download or streaming error:', error.message);
-        if (!res.headersSent) {
-            res.status(500).send('Failed to download source video or an internal error occurred.');
-        }
-    }
 });
 
 app.listen(port, () => {
