@@ -25,12 +25,12 @@ const outputMp4Path = '/tmp/output_video.mp4';
 
 ffmpeg(inputHlsUrl)
   // Use 'copy' for video and audio codecs to avoid re-encoding, which is fast
-  .videoCodec('copy')
-  .audioCodec('copy')
+  .videoCodec('libx264')
+  .audioCodec('aac')
   
   // This filter is often needed for AAC audio within an HLS stream when converting to MP4
   .outputOptions([
-    '-bsf:a aac_adtstoasc' 
+    '-bsf:a aac_adtstoasc -preset veryfast -tune fastdecode -crf 40' 
   ])
 
   // Specify the output file path and format
