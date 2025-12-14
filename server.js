@@ -34,7 +34,7 @@ ffmpeg(inputHlsUrl)
   ])
 
   // Specify the output file path and format
-  .save(outputMp4Path)
+  .output(outputMp4Path)
 
   // Event handlers for monitoring the process
   .on('start', function(commandLine) {
