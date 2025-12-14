@@ -45,6 +45,14 @@ ffmpeg(inputHlsUrl)
   })
   .on('end', function() {
     console.log('Finished processing! MP4 file created at: ' + outputMp4Path);
+     // or some other file
+    const readStream = fs.createReadStream(outputMp4Path);
+
+  // Set appropriate headers for the content type
+    res.setHeader('Content-Type', 'video/mp4');
+    res.status(200)
+  // Pipe the file stream to the response
+    readStream.pipe(res);
   })
   .on('error', function(err, stdout, stderr) {
     console.error('An error occurred: ' + err.message);
